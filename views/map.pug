@@ -1,0 +1,222 @@
+extends layout
+block content 
+    .conatiner 
+        .row 
+            .col-md-6
+                    .row#select
+                        
+                        form#selectForm.form-inline
+                            .col-8
+                            h3#areawise Choose an area to find parking conditions:
+
+                            select.form-select.selectpicker(data-style='btn-info' data-live-search='true',name='name')
+                                option(value=[19.096713,72.874374]) Mumbai Airport
+                                option(value=[19.120138,72.846488]) Andheri Railway Station
+                                option(value=[19.019392, 72.843647]) Dadar Railway Station 
+                                option(value=[19.038451, 72.865045]) Sion 
+                                option(value=[19.054073, 72.831027]) Bandra 
+                                option(value=[18.937613, 72.825560]) Churchgate 
+                                option(value=[19.118965, 72.910285]) Powai
+                                option(value=[19.212906, 72.969529]) Thane
+                                option(value=[19.286662, 72.857332]) Mira Bhayandar
+                                option(value=[19.184224, 72.846767]) Malad
+                                option(value=[19.229586, 72.849309]) Borivali 
+                                option(value=[19.044490, 72.899214]) Chembur
+                                option(value=[19.066703, 72.880730]) Kurla
+                                option(value=[19.097435, 72.830894]) Juhu
+                                option(value=[18.973988, 72.839137]) Byculla
+                                option(value=[19.000440, 72.817266]) Worli
+                                option(value=[19.012626, 72.857445]) Wadala
+                                option(value=[18.995669, 72.854862]) Sewri
+                                option(value=[18.997800, 72.833684]) Parel
+                                option(value=[18.915371, 72.827602]) Colaba
+                            .col-4
+                            input#submitBtn(type='submit',class="ml-5 btn btn-primary",value='Submit')
+                    .row#select
+                        .col.mb-4
+                            .row 
+                                form.form-inline
+                                .col-6.mt-2
+                                    h4#areawise Check near your current location
+                                    
+                                .col-1.mt-3
+                                    .material-switch.pull-right
+                                        input#someSwitchOptionPrimary.bg-primary(name='someSwitchOption001' type='checkbox')
+                                        label.label-primary.bg-primary(for='someSwitchOptionPrimary') 
+                    .row#select
+                        h4#areawise Put a marker on the area in the adjacent map where you want to find parking
+                    .row#select
+                        if selectedLat === 0
+                            h4#areawise We have found over 200 parking locations in Mumbai 
+                            h3#areawise The results will appear hear 👇👇
+                            table.table 
+                                    thead(class="thead-dark")
+                                        tr 
+                                            th Name 
+                                                i.fa.fa-car(style='font-size:36px;')
+                                            th Address 
+                                                i.fa.fa-address-card(style='font-size:36px')
+                                            th Distance
+                                                i.fas.fa-map-marked-alt(style='font-size:36px')
+                                        tr
+                        else
+                            if jsonData.features.length !== 0
+                                h3#areawise We have found #{jsonData.features.length} location feasible for you to park in #{areaname}!!
+                                h4#areawise Green Marked locations are the nearest
+                                table.table 
+                                    thead(class="thead-dark")
+                                        tr 
+                                            th Name 
+                                                i.fa.fa-car(style='font-size:36px;')
+                                            th Address 
+                                                i.fa.fa-address-card(style='font-size:36px')
+                                            if selectedLat !== 0
+                                                th Distance
+                                                i.fas.fa-map-marked-alt(style='font-size:36px')
+                                        tr 
+                                    tbody 
+
+                                        each parking,index in jsonData.features 
+                                            tr 
+                                                td.nameOfParking(id=index) 
+                                                    button.parkingName.btn.btn-primary #{parking.properties.f2}
+                                                td #{parking.properties.f3}
+                                                if selectedLat !== 0
+                                                    if parseInt(getDistance([parking.geometry.coordinates[1],parking.geometry.coordinates[0]],[selectedLat,selectedLon])/1000)<2
+                                                        td#green #{(getDistance([parking.geometry.coordinates[1],parking.geometry.coordinates[0]],[selectedLat,selectedLon])/1000).toFixed(2)}kms
+                                                    else 
+                                                        td#orange #{(getDistance([parking.geometry.coordinates[1],parking.geometry.coordinates[0]],[selectedLat,selectedLon])/1000).toFixed(2)}kms
+                            else 
+                                h3#areawise We are sorry 🙁!No parking locations near to area
+            .col-md-4
+                #map
+            .col-md-2 
+                if selectedLat !== 0
+                    #verticenter 
+                        button#btnStyle.btn.btn-primary Get Original Map  
+
+                
+    script. 
+        var calcDistance = !{getDistance}
+    
+        console.log(calcDistance([12,12],[12,13]))
+        var myData = !{JSON.stringify(jsonData)};
+        console.log(myData.features)
+        //Create variable to hold map element,give initial settings to map
+        var map = L.map('map',{center:[19.123074, 72.885982],zoom:11})
+
+        //- var markersArray = [];
+
+        var greenIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+        var redIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        })
+        var blueIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        })
+
+        var newmarker;
+        //- var myDataPoint = L.marker([19.1958343, 72.819328]).addTo(map);
+        //Add OpenStreetMap tile layer to map content
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        //Add JSON to map
+        L.geoJson(myData,{
+            onEachFeature: (feature,layer)=>{
+                layer.bindPopup(feature.properties.f2)
+                //- markersArray.push(newmarker);
+            }
+        }).addTo(map);
+         
+        marker
+        var marker;
+        var selectLat = !{selectedLat}
+        var selectLon = !{selectedLon}
+        
+       
+        if(selectLat !== 0){
+            L.marker([selectLat,selectLon],{icon:greenIcon}).addTo(map)
+        }
+        map.on('click',async(e)=>{
+            if(marker)
+                map.removeLayer(marker);
+            console.log(e.latlng)
+            marker = L.marker(e.latlng,{icon:greenIcon}).addTo(map)
+            console.log(`${e.latlng.lat},${e.latlng.lng}]`)
+            window.location.assign(`/filter?name=%5B${e.latlng.lat}%2C${e.latlng.lng}%5D`)
+        })
+        var currentLocMarker;
+        function locateUser() {
+            this.map.locate({setView:true,maxZoom:11}).on('locationfound',(e)=>{
+                console.log(e.latitude,e.longitude)
+                currentLocMarker = L.marker([e.latitude,e.longitude],{icon:greenIcon}).addTo(map)
+                window.location.assign(`/filter?name=%5B${e.latitude}%2C${e.longitude}%5D`)
+            })
+        }
+
+        $('#actions').find('a').on('click', function() {
+            locateUser();
+        });
+
+        $('#someSwitchOptionPrimary').on('change',function(e){
+            if($(this).is(':checked')){
+                locateUser()
+            }else{
+                if(typeof currentLocMarker !== 'undefined'){
+                    map.removeLayer(currentLocMarker)
+                    map.panTo(new L.latLng(19.123074, 72.885982))
+                }
+            }
+        })
+        $('#btnStyle').on('click',function(e){
+            window.location.assign("/map")
+        })
+        var mar;
+        //- console.log(markersArray)
+        $('.nameOfParking').on('click',function(e){
+            if(typeof mar !== 'undefined')
+                mar.setIcon(blueIcon)
+            var id = $(this)[0].id
+            console.log(id)
+            //- markersArray[Number(id)] = markersArray[Number(id)].setIcon(redIcon)
+            //- markersArray[Number(id)]
+            console.log(myData.features[id].geometry.coordinates)
+            mar = L.marker([myData.features[id].geometry.coordinates[1],myData.features[id].geometry.coordinates[0]],{icon:redIcon}).addTo(map)
+            //- .setIcon(new myIconReplc)
+            //- var existing = L.marker([markersArray[Number(id)]._latlng.lat,markersArray[Number(id)]._latlng.lng],{icon:greenIcon}).addTo(map)
+            //- console.log(existing)
+        })
+
+        $('#selectForm').on('submit',function(e){
+            e.preventDefault()
+            //- console.log("submitted")
+            console.log($(this))
+            var i=0;
+            while(i<20){
+                if($(this)[0][0][i].selected){
+                    console.log($(this)[0][0][i].label,$(this)[0][0][i].value)
+                    window.location.assign(`/filter?name=${$(this)[0][0][i].value}&areaname=${$(this)[0][0][i].label}`)
+                }
+                i++;
+            }
+            
+           
+            //- console.log($(this)[0][0].filter((option)=>option.selected===true));
+        })
+        
