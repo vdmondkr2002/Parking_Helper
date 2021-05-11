@@ -9,7 +9,7 @@ const { Client, Query } = require("pg");
 // var password = process.env.POSGRESQL_DB_PASSWORD;
 // var host = "localhost:5432";
 // var database = "mumbai_parking_lots";
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED='0'
 var conString = process.env.DATABASE_URL; //database connection
 
 // Set up your database query to display GeoJSON
