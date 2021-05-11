@@ -22,7 +22,14 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/data", (req, res) => {
-  var client = new Client(conString);
+  var client = new Client({
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: 5432,
+    host: process.env.DB_HOST,
+    ssl: true
+  });
   client.connect();
   var query = client.query(new Query(parking_lots_query));
   query.on("row", (row, result) => {
@@ -35,7 +42,14 @@ router.get("/data", (req, res) => {
 });
 
 router.get("/map", (req, res) => {
-  var client = new Client(conString);
+  var client = new Client({
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: 5432,
+    host: process.env.DB_HOST,
+    ssl: true
+  });
 
   client.connect();
   var query = client.query(new Query(parking_lots_query));
@@ -69,7 +83,14 @@ router.get("/filter*", (req, res) => {
   var filter_query =
     "SELECT row_to_json(fc) FROM (SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features FROM (SELECT 'Feature' As type,ST_AsGeoJSON(lg.geom)::json As geometry,row_to_json((id, name,address)) As properties FROM mumbai_parking_lots As lg WHERE 1=1 AND ST_DISTANCE(ST_TRANSFORM(ST_GEOMFROMTEXT('POINT("+lons+" "+lats+")',4326), 7755),ST_TRANSFORM((geom),7755)) <= 5000 ) As f) As fc";
   console.log(filter_query)
-  var client = new Client(conString);
+  var client = new Client({
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: 5432,
+    host: process.env.DB_HOST,
+    ssl: true
+  });
   client.connect();
   var query = client.query(new Query(filter_query));
   query.on("row", (row, result)=>{
