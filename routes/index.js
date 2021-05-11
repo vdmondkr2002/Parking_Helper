@@ -5,11 +5,12 @@ var router = express.Router();
 const { Client, Query } = require("pg");
 
 //Setup Connection
-var username = "postgres";
-var password = "Vedant@2002";
-var host = "localhost:5432";
-var database = "mumbai_parking_lots";
-var conString = `postgres://${username}:${password}@${host}/${database}`; //database connection
+// var username = "postgres";
+// var password = process.env.POSGRESQL_DB_PASSWORD;
+// var host = "localhost:5432";
+// var database = "mumbai_parking_lots";
+
+var conString = process.env.DATABASE_URL; //database connection
 
 // Set up your database query to display GeoJSON
 var parking_lots_query =
