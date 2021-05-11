@@ -38,6 +38,17 @@ a {
   border: 10px solid green;
   border-radius: 5px;
 }
+
+#repoLink{
+  font-size: 20px;
+  border: 2px solid red;
+  border-radius: 5px;
+  background: orange;
+  margin-top: 5px;
+}
+#repoLink a{
+  color: rebeccapurple;
+}
 #homeLeftImage{
   background-image: url("../images/car-parking-homepage-cropped.jpg");
   background-repeat: no-repeat;
@@ -107,6 +118,7 @@ th, td {
 }
 
 
+/*Material switch*/
 .material-switch > input[type="checkbox"] {
   display: none;   
 }
@@ -153,3 +165,13 @@ th, td {
 }
 
 
+/*About page*/
+#aboutContainer{
+  width: 400px;
+  background-color: burlywood;
+  border: 6px solid yellow;
+  border-radius: 15px;
+  text-align: center;
+  padding: 20px;
+  align-items: center;
+}

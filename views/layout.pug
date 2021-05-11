@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title #{title} | WHATABYTE
+    title #{title} | Parking Helper
     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css",integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm",crossorigin="anonymous")
   
     link(rel="stylesheet",href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css",integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==",crossorigin="anonymous")
@@ -23,7 +23,7 @@ html
 
   body
     nav.navbar.navbar-expand-lg
-      a.navbar-brand(href='#')
+      a.navbar-brand(href='/')
         #logo 
           i.fa.fa-map-marker(style='font-size:36px;color:red') Parking Helper
       button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
@@ -38,6 +38,7 @@ html
           a.nav-link(href="/map")
             .btn.btn-primary#nav-btns Go To Map
         span.navbar-text 
-          .btn.btn-primary#nav-btns About
-              span.sr-only (current)
+          a.nav-link(href="/about")
+            .btn.btn-primary#nav-btns About
+                span.sr-only (current)
     block content

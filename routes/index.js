@@ -17,7 +17,7 @@ var parking_lots_query =
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+  res.render("index", { title: "Home" });
 });
 
 router.get("/data", (req, res) => {
@@ -45,7 +45,7 @@ router.get("/map", (req, res) => {
   query.on("end", (result) => {
     var data = result.rows[0].row_to_json;
     res.render("map", {
-      title: "Express API",
+      title: "Map",
       jsonData: data, //pass the geojson data
       getDistance: getDistance,
       selectedLat:0,
@@ -85,7 +85,7 @@ router.get("/filter*", (req, res) => {
       data.features=[]
     }
     res.render("map", {
-      title: "Sushant API",
+      title: "Map",
       jsonData: data,
       getDistance: getDistance,
       selectedLat: lat,
@@ -94,6 +94,13 @@ router.get("/filter*", (req, res) => {
     });
   });
 });
+
+
+router.get('/about',(req,res)=>{
+  res.render('about',{
+    title:"About"
+  })
+})
 
 function getDistance(origin, destination) {
   const toRadian = (degree)=>{
