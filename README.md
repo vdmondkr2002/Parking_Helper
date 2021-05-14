@@ -1,4 +1,4 @@
-# Parking_Helper
+# 📍Parking_Helper🚗
 A website made using leaflet.js, postgis and postgresql to help find people parking locations in Mumbai Area
 
 ## Project Demo
@@ -19,12 +19,12 @@ A website made using leaflet.js, postgis and postgresql to help find people park
 ## Local installation-
 1. Clone the repository:
   ```
-  git clone https://github.com/vdmondkr2002/Parking_Helper.git
+  $ git clone https://github.com/vdmondkr2002/Parking_Helper.git
   ```
 2. Install the necessary dependencies-
   ```
-  cd Parking_Helper
-  npm install
+  $ cd Parking_Helper
+  $ npm install
   ```
 3. Setting environment variables-
   * Create a .env file and copy paste contents from .env.example file.
@@ -32,5 +32,5 @@ A website made using leaflet.js, postgis and postgresql to help find people park
   * Edit the values of environment variables as directed.
 5. Run the server-
   ```
-  npm start
+  $ npm start
   ```
