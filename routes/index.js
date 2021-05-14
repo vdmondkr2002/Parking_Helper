@@ -35,6 +35,7 @@ router.get("/data", (req, res) => {
   });
 });
 
+/* GET map page */
 router.get("/map", (req, res) => {
   var client = new Client({
     user: process.env.DB_USERNAME,
@@ -63,6 +64,7 @@ router.get("/map", (req, res) => {
   });
 });
 
+/* Get filter route */
 router.get("/filter*", (req, res) => {
   console.log(req.query)
   var name = req.query.name
@@ -112,12 +114,14 @@ router.get("/filter*", (req, res) => {
 });
 
 
+/* GET about page */
 router.get('/about',(req,res)=>{
   res.render('about',{
     title:"About"
   })
 })
 
+/* Utility functions */
 function getDistance(origin, destination) {
   const toRadian = (degree)=>{
     return degree*Math.PI/180;
